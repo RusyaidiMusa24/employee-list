@@ -20,8 +20,14 @@ export default function EmployeeList() {
     return (
         <div className="flex flex-1 flex-col items-center bg-bg-primary">
             <div className="mt-8 w-[80%] rounded-xl bg-surface">
-                <div className="flex flex-col gap-4 border-b border-border px-4 py-5 sm:px-5 lg:flex-row lg:items-end lg:justify-between">
+                <div className="flex flex-col gap-4 border-b border-border px-4 py-5 sm:px-5 lg:flex-row lg:items-center lg:justify-between">
                     <h2 className="text-h2">Employees</h2>
+
+                    <input
+                        className="bg-bg-background text-body rounded-md border border-border px-4 py-1 text-secondary"
+                        placeholder="Search name..."
+                    ></input>
+
                     <div
                         role="group"
                         aria-label="Filter applicants by stage"
