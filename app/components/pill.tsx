@@ -18,12 +18,13 @@ const pillVariants = cva("rounded-md px-2", {
 
 type PillProps = VariantProps<typeof pillVariants> & {
     children?: ReactNode;
+    className?: string;
 };
 
-export default function Pill({ variant, children }: PillProps) {
+export default function Pill({ variant, children, className }: PillProps) {
     return (
-        <div className={pillVariants({ variant })}>
-            <span className="text-body-sm">{children}</span>
-        </div>
+        <span className={pillVariants({ variant })}>
+            <span className={"text-body px-1 " + className}>{children}</span>
+        </span>
     );
 }
