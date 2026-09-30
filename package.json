@@ -7,7 +7,8 @@
         "build": "next build",
         "start": "next start",
         "lint": "eslint",
-        "generate:employees": "node scripts/generate-employees.mjs"
+        "generate:employees": "node scripts/generate-employees.mjs",
+        "test": "vitest run"
     },
     "dependencies": {
         "@base-ui/react": "^1.8.0",
@@ -25,7 +26,9 @@
     "devDependencies": {
         "@tailwindcss/postcss": "^4",
         "@testing-library/dom": "^10.4.2",
+        "@testing-library/jest-dom": "^7.0.1",
         "@testing-library/react": "^16.3.3",
+        "@testing-library/user-event": "^14.6.7",
         "@types/node": "^20",
         "@types/react": "^19",
         "@types/react-dom": "^19",
