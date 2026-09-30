@@ -54,7 +54,8 @@ export const employeeListResponse = z.object({
 
 export type EmployeeListResponse = z.infer<typeof employeeListResponse>;
 
-export function getEmployeeList(request: Request) {
+export async function getEmployeeList(request: Request) {
+    await applyApiDelay();
     const params = new URL(request.url).searchParams;
     const parsedQuery = listQuerySchema.safeParse({
         search: params.get("search") ?? undefined,
@@ -97,6 +98,7 @@ export function getEmployeeList(request: Request) {
     } satisfies EmployeeListResponse);
 }
 
-export function getEmployeeById(id: string) {
+export async function getEmployeeById(id: string) {
+    await applyApiDelay();
     return employees.find((employee) => employee.id === id);
 }

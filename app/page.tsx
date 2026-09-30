@@ -1,6 +1,7 @@
 "use server";
-import { employeeListResponse } from "@/lib/employee-api";
+import { getEmployeeList } from "@/lib/employee-api";
 import EmployeeList from "./components/employee-list";
+import { fetchHost } from "@/lib/api";
 
 type HomeProps = {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -13,19 +14,10 @@ export default async function Home({ searchParams }: HomeProps) {
         limit: "10",
     });
     const query = typeof params.q === "string" ? params.q.trim() : "";
-    console.log(query);
     if (query) search.set("q", query);
-    const response = await fetch(
-        "http://localhost:3000/api/employees?" + search,
-    );
-    const resultJson = await response.json();
-    const employeeListResult = employeeListResponse.safeParse(resultJson);
 
-    if (employeeListResult.success)
-        return (
-            <EmployeeList
-                initialData={employeeListResult.data}
-                params={params}
-            />
-        );
+    const request = new Request(`${await fetchHost()}/api/employees?${search}`);
+    const employeeList = await (await getEmployeeList(request)).json();
+
+    return <EmployeeList initialData={employeeList} params={params} />;
 }

@@ -24,9 +24,17 @@ The only library added for DX was:
 - This app uses SSR to hydrate a client side component using the following pattern:
 
 ```jsx
-async function SSRComponent () {
-    const initialData = fetch('... some api') // data is fetch server side before entering a client-side component
-    return <ClientComponent initialData={initialData}>
+async function SSRComponent() {
+    const initialData = getServerData(); // data is fetch server side before entering a client-side component
+    return <ClientComponent initialData={initialData} />;
+}
+
+async function ClientComponent({ initialData }) {
+    const dataQuery = useQuery({
+        placeholderData: initialData,
+        // ...
+    });
+    return <></>;
 }
 ```
 
