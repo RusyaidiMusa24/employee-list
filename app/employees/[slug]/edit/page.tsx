@@ -1,7 +1,7 @@
 "use server";
 
+import { employeeSchema } from "@/lib/employee-api";
 import { notFound } from "next/navigation";
-import { getEmployeeById } from "@/lib/employee-api";
 import { EmployeeEditor, type EmployeeFormValues } from "../../employee-editor";
 
 export default async function EditEmployeePage({
@@ -10,10 +10,13 @@ export default async function EditEmployeePage({
     params: Promise<{ slug: string }>;
 }) {
     const { slug } = await params;
-    const employee = getEmployeeById(slug);
+    const response = await fetch("http://localhost:3000/api/employees/" + slug);
+    const employeeParse = employeeSchema.safeParse(await response.json());
 
-    if (!employee) notFound();
+    if (!employeeParse.success) notFound();
 
+    if (!employeeParse.success) notFound();
+    const employee = employeeParse.data;
     return (
         <EmployeeEditor
             initialValues={{
