@@ -1,3 +1,5 @@
+"use server";
+
 import { notFound } from "next/navigation";
 import { getEmployeeById } from "@/lib/employee-api";
 import { EmployeeEditor, type EmployeeFormValues } from "../../employee-editor";
@@ -22,7 +24,7 @@ export default async function EditEmployeePage({
                 role: employee.role,
                 status: employee.status,
             }}
-            backHref={`/employee/${employee.id}`}
+            backHref={`/employees/${employee.id}`}
         />
     );
 }

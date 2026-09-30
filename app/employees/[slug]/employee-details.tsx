@@ -1,12 +1,11 @@
-"use client";
+"use server";
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { ArrowLeft, Pencil } from "lucide-react";
-import type { ReactNode } from "react";
-import type { Employee } from "@/lib/employee-api";
 import { Button } from "@/app/components/button";
 import Pill from "@/app/components/pill";
+import type { Employee } from "@/lib/employee-api";
+import { ArrowLeft, Pencil } from "lucide-react";
+import Link from "next/link";
+import type { ReactNode } from "react";
 
 const statusVariants: Record<
     Employee["status"],
@@ -18,9 +17,11 @@ const statusVariants: Record<
     Intern: "accent",
 };
 
-export default function EmployeeDetails({ employee }: { employee: Employee }) {
-    const router = useRouter();
-
+export default async function EmployeeDetails({
+    employee,
+}: {
+    employee: Employee;
+}) {
     const initials = employee.name
         .split(" ")
         .map((part) => part[0])
@@ -57,17 +58,16 @@ export default function EmployeeDetails({ employee }: { employee: Employee }) {
                                 </h1>
                             </div>
                         </div>
+                        <Link href={`/employees/${employee.id}/edit`}>
+                            <Button
+                                type="button"
 
-                        <Button
-                            type="button"
-                            onClick={() =>
-                                router.push(`/employee/${employee.id}/edit`)
-                            }
-                            variant="primary"
-                        >
-                            <Pencil data-icon="inline-start" />
-                            Edit details
-                        </Button>
+                                variant="primary"
+                            >
+                                <Pencil data-icon="inline-start" />
+                                Edit details
+                            </Button>
+                        </Link>
                     </header>
 
                     <dl className="grid gap-x-8 gap-y-6 px-5 py-6 sm:grid-cols-2 sm:px-8">

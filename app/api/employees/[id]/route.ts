@@ -20,5 +20,5 @@ export async function GET(
         return Response.json({ error: "Employee not found." }, { status: 404 });
     }
 
-    return Response.json({ data: employee });
+    return Response.json(employee);
 }

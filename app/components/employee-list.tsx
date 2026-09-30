@@ -170,7 +170,7 @@ export default function EmployeeList({
                     />
 
                     <Link
-                        href={"/employee/new"}
+                        href={"/employees/new"}
                         className="text-body-sm inline-flex items-center gap-2 text-secondary outline-none hover:text-primary focus-visible:ring-2 focus-visible:ring-accent-primary"
                     >
                         <Button variant={"secondary"}>+ New Employee</Button>

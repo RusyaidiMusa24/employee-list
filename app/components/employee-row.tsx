@@ -9,7 +9,7 @@ export default function EmployeeRow({ employee }: { employee: Employee }) {
         <tr className="border-t border-border-subtle transition-colors hover:bg-surface2/60">
             <td className="px-4 py-3">
                 <Link
-                    href={`/employee/${employee.id}`}
+                    href={`/employees/${employee.id}`}
                     className="group flex min-w-48 items-center gap-3 rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-accent-primary"
                 >
                     <span
