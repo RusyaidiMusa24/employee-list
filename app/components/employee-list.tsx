@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { Button } from "./button";
 import { Input } from "./input";
-import { AlertCircle, RotateCw } from "lucide-react";
+import { AlertCircle, ChevronLeft, ChevronRight, RotateCw } from "lucide-react";
 import EmployeeRow from "./employee-row";
 import { EmployeeRowSkeleton } from "./employee-skeleton";
 import { Params } from "@/lib/types";
@@ -104,6 +104,12 @@ export default function EmployeeList({
     };
 
     const result = employeesQuery.data;
+
+    const pageSize = pageParams.limit;
+    const page = pageParams.page;
+
+    const firstResult = result?.pagination.total ? (page - 1) * pageSize : 0;
+    const lastResult = Math.min(page * pageSize, result?.pagination.total ?? 0);
     return (
         <div className="flex flex-1 flex-col items-center bg-bg-primary">
             <div className="my-8 w-[80%] rounded-xl bg-surface">
@@ -167,7 +173,7 @@ export default function EmployeeList({
                         href={"/employee/new"}
                         className="text-body-sm inline-flex items-center gap-2 text-secondary outline-none hover:text-primary focus-visible:ring-2 focus-visible:ring-accent-primary"
                     >
-                        <Button variant={"secondary"}>+ New</Button>
+                        <Button variant={"secondary"}>+ New Employee</Button>
                     </Link>
                 </div>
                 <table className="w-full">
@@ -217,7 +223,7 @@ export default function EmployeeList({
                                     >
                                         <AlertCircle className="size-6 text-status-error" />
                                         <p className="mt-3 text-sm font-medium text-primary">
-                                            Applicants could not be loaded
+                                            Employees could not be loaded
                                         </p>
                                         <p className="mt-1 text-sm text-secondary">
                                             Check your connection and try again.
@@ -253,25 +259,93 @@ export default function EmployeeList({
                                     className="px-4 py-14 text-center"
                                 >
                                     <p className="text-sm font-medium text-primary">
-                                        {params
+                                        {result?.pagination?.totalUnfiltered
                                             ? `No employees match "${pageParams.search}"`
-                                            : filter === "All"
-                                              ? "No applicants yet"
-                                              : `No ${filters.find((item) => item.value === filter)?.label.toLowerCase()} applicants`}
+                                            : "No Employees Added"}
                                     </p>
                                     <p className="mt-1 text-sm text-secondary">
                                         {params
                                             ? "Try another employee, role, or department."
-                                            : filter === "All"
-                                              ? "New applicants will appear here."
-                                              : "Try another stage filter to see more applicants."}
+                                            : "Press `+ New Employee` to get started."}
                                     </p>
                                 </td>
                             </tr>
                         </tbody>
                     )}
-                    <tfoot></tfoot>
                 </table>
+                <footer className="flex flex-col gap-3 border-t border-border px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+                    <p className="text-xs text-secondary">
+                        Showing {firstResult}–{lastResult} of{" "}
+                        {result?.pagination.total ?? 0} applicants
+                    </p>
+                    <div className="flex items-center justify-between gap-4 sm:justify-end">
+                        <label className="flex items-center gap-2 text-xs text-secondary">
+                            Rows
+                            <select
+                                value={pageParams.limit}
+                                onChange={(event) => {
+                                    const limit = Number(event.target.value);
+                                    const max = result?.pagination.total ?? 0;
+                                    setPageParams({
+                                        ...pageParams,
+                                        limit: limit,
+                                        page:
+                                            limit * pageParams.page > max
+                                                ? Math.floor(max / limit)
+                                                : pageParams.page,
+                                    });
+                                }}
+                                aria-label="Applicants per page"
+                                className="h-8 rounded-md border border-border bg-bg-primary px-2 text-primary outline-none focus-visible:ring-2 focus-visible:ring-accent-primary"
+                            >
+                                {[10, 50, 100].map((size) => (
+                                    <option key={size} value={size}>
+                                        {size}
+                                    </option>
+                                ))}
+                            </select>
+                        </label>
+                        <div className="flex items-center gap-2">
+                            <span className="text-xs text-secondary">
+                                Page {page} of{" "}
+                                {result?.pagination.totalPages || 0}
+                            </span>
+                            <Button
+                                type="button"
+                                size="icon-sm"
+                                variant="secondary"
+                                aria-label="Previous page"
+                                disabled={page <= 1}
+                                onClick={() =>
+                                    setPageParams({
+                                        ...pageParams,
+                                        page: pageParams.page - 1,
+                                    })
+                                }
+                            >
+                                <ChevronLeft />
+                            </Button>
+                            <Button
+                                type="button"
+                                size="icon-sm"
+                                variant="secondary"
+                                aria-label="Next page"
+                                disabled={
+                                    page >=
+                                    (result?.pagination?.totalPages ?? 0)
+                                }
+                                onClick={() =>
+                                    setPageParams({
+                                        ...pageParams,
+                                        page: pageParams.page + 1,
+                                    })
+                                }
+                            >
+                                <ChevronRight />
+                            </Button>
+                        </div>
+                    </div>
+                </footer>
             </div>
         </div>
     );

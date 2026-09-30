@@ -31,7 +31,7 @@ export async function applyApiDelay() {
 }
 
 export function getForcedFailure(request: Request) {
-    if (new URL(request.url).searchParams.get("fail") !== "1") {
+    if (new URL(request.url).searchParams.get("search") !== "fail") {
         return null;
     }
 
@@ -47,6 +47,7 @@ export const employeeListResponse = z.object({
         page: z.number(),
         limit: z.number(),
         total: z.number(),
+        totalUnfiltered: z.number(),
         totalPages: z.number(),
     }),
 });
@@ -90,6 +91,7 @@ export function getEmployeeList(request: Request) {
             page,
             limit,
             total: filteredEmployees.length,
+            totalUnfiltered: employees.length,
             totalPages: Math.ceil(filteredEmployees.length / limit),
         },
     } satisfies EmployeeListResponse);
