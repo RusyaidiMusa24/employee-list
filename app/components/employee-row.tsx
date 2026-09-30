@@ -1,14 +1,8 @@
 import { Employee } from "@/lib/employee-api";
 import Link from "next/link";
-
-function initials(name: string) {
-    return name
-        .split(" ")
-        .map((part) => part[0])
-        .slice(0, 2)
-        .join("")
-        .toUpperCase();
-}
+import Pill from "./pill";
+import { statusVariants, getColorToken } from "@/lib/colors";
+import { initials } from "@/lib/text";
 
 export default function EmployeeRow({ employee }: { employee: Employee }) {
     return (
@@ -39,9 +33,11 @@ export default function EmployeeRow({ employee }: { employee: Employee }) {
                     {employee.department}
                 </span>
             </td>
-            <td className="px-4 py-3">
-                <span className="mt-0.5 block text-xs text-tertiary">
-                    {employee.status}
+            <td className="items-center px-4 py-3">
+                <span>
+                    <Pill variant={statusVariants[employee.status]}>
+                        {employee.status}
+                    </Pill>
                 </span>
             </td>
             <td className="px-4 py-3 text-sm whitespace-nowrap text-secondary">
@@ -51,36 +47,4 @@ export default function EmployeeRow({ employee }: { employee: Employee }) {
             </td>
         </tr>
     );
-}
-
-const colors = [
-    "bg-red-700/60",
-    "bg-orange-700/60",
-    "bg-amber-700/60",
-    "bg-yellow-700/60",
-    "bg-lime-700/60",
-    "bg-green-700/60",
-    "bg-emerald-700/60",
-    "bg-teal-700/60",
-    "bg-cyan-700/60",
-    "bg-sky-700/60",
-    "bg-blue-700/60",
-    "bg-indigo-700/60",
-    "bg-violet-700/60",
-    "bg-purple-700/60",
-    "bg-fuchsia-700/60",
-    "bg-pink-700/60",
-    "bg-rose-700/60",
-];
-
-function getColorToken(value: string): string {
-    if (!value) return "blue-600";
-
-    let hash = 0;
-
-    for (let i = 0; i < value.length; i++) {
-        hash = (hash * 31 + value.charCodeAt(i)) | 0;
-    }
-
-    return colors[Math.abs(hash) % colors.length];
 }
