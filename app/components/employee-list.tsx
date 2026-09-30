@@ -12,7 +12,6 @@ import EmployeeRow from "./employee-row";
 import { EmployeeRowSkeleton } from "./employee-skeleton";
 import { Params } from "@/lib/types";
 import z from "zod";
-import { useRouter } from "next/navigation";
 
 export type EmployeeFilters =
     "All" | "Full-Time" | "On-Leave" | "Part-Time" | "Intern";
@@ -40,7 +39,7 @@ export function useEmployees(
     initialData?: EmployeeListResponse,
 ) {
     return useQuery({
-        queryKey: ["employees-list", params],
+        queryKey: ["employees-list", params, params.status],
         queryFn: async () => {
             const query = new URLSearchParams(
                 Object.entries(params).flatMap(([key, value]) =>
@@ -56,7 +55,8 @@ export function useEmployees(
 
             return employeeListResponse.parse(await response.json());
         },
-        initialData,
+        placeholderData: initialData,
+        staleTime: 30_000,
     });
 }
 
@@ -73,8 +73,6 @@ export default function EmployeeList({
     const [filter, setFilter] = useState<Employee["status"] | "All">("All");
     const inputTextRef = useRef("");
     const statusFilter = filter === "All" ? {} : { status: filter };
-
-    const router = useRouter();
 
     const [pageParams, setPageParamsInternal] = useState<EmployeeQueryParams>(
         safeParams.success
@@ -100,7 +98,7 @@ export default function EmployeeList({
                 !value ? [] : [[key, String(value)]],
             ),
         );
-        router.replace(`/?${query.toString()}`);
+        window.history.replaceState(null, "", `?${query.toString()}`);
     };
 
     const result = employeesQuery.data;
