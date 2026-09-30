@@ -96,7 +96,7 @@ export function EmployeeEditor({
                             setErrors(nextErrors);
                             return;
                         }
-                        if (backHref != "/") router.back();
+                        router.back();
 
                         setErrors({});
                     }}
