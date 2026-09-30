@@ -7,11 +7,13 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { Button } from "./button";
+import { Input } from "./input";
 import { AlertCircle, RotateCw } from "lucide-react";
 import EmployeeRow from "./employee-row";
 import { EmployeeRowSkeleton } from "./employee-skeleton";
 import { Params } from "@/lib/types";
 import z from "zod";
+import Link from "next/link";
 
 export type EmployeeFilters =
     "All" | "Full-Time" | "On-Leave" | "Part-Time" | "Intern";
@@ -108,23 +110,6 @@ export default function EmployeeList({
                 <div className="flex flex-col gap-4 border-b border-border px-4 py-5 sm:px-5 lg:flex-row lg:items-center lg:justify-between">
                     <h2 className="text-h2">Employees</h2>
 
-                    <input
-                        className="bg-bg-background text-body rounded-md border border-border px-4 py-1 text-secondary"
-                        placeholder="Search name..."
-                        defaultValue={pageParams.search ?? ""}
-                        onChange={(e) =>
-                            (inputTextRef.current = e.target.value)
-                        }
-                        onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                                setPageParams({
-                                    ...pageParams,
-                                    search: inputTextRef.current,
-                                });
-                            }
-                        }}
-                    ></input>
-
                     <div
                         role="group"
                         aria-label="Filter applicants by stage"
@@ -158,6 +143,32 @@ export default function EmployeeList({
                             );
                         })}
                     </div>
+                </div>
+
+                <div className="flex flex-row justify-between px-4 py-4">
+                    <Input
+                        className="w-auto px-4 py-1 text-secondary"
+                        placeholder="Search name..."
+                        defaultValue={pageParams.search ?? ""}
+                        onChange={(e) =>
+                            (inputTextRef.current = e.target.value)
+                        }
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                setPageParams({
+                                    ...pageParams,
+                                    search: inputTextRef.current,
+                                });
+                            }
+                        }}
+                    />
+
+                    <Link
+                        href={"/employee/new"}
+                        className="text-body-sm inline-flex items-center gap-2 text-secondary outline-none hover:text-primary focus-visible:ring-2 focus-visible:ring-accent-primary"
+                    >
+                        <Button variant={"secondary"}>+ New</Button>
+                    </Link>
                 </div>
                 <table className="w-full">
                     <colgroup>
