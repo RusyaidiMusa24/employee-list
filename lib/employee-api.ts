@@ -6,7 +6,7 @@ const API_DELAY = 500;
 export const employeeSchema = z.object({
     id: z.string(),
     name: z.string(),
-    email: z.string().email(),
+    email: z.email(),
     role: z.string(),
     department: z.string(),
     status: z.enum(["Full-Time", "On-Leave", "Part-Time", "Intern"]),
