@@ -39,6 +39,7 @@ type EmployeeQueryParams = z.infer<typeof employeeQueryParamsSchema>;
 export function useEmployees(
     params: EmployeeQueryParams,
     initialData?: EmployeeListResponse,
+    initialParams?: EmployeeQueryParams,
 ) {
     return useQuery({
         queryKey: ["employees-list", params, params.status],
@@ -57,7 +58,11 @@ export function useEmployees(
 
             return employeeListResponse.parse(await response.json());
         },
-        placeholderData: initialData,
+        initialData:
+            initialParams &&
+            JSON.stringify(initialParams) === JSON.stringify(params)
+                ? initialData
+                : undefined,
         staleTime: 30_000,
     });
 }
@@ -91,6 +96,7 @@ export default function EmployeeList({
     const employeesQuery = useEmployees(
         { ...pageParams, ...statusFilter },
         initialData,
+        (safeParams.success && safeParams.data) || undefined,
     );
 
     const setPageParams = (params: EmployeeQueryParams) => {

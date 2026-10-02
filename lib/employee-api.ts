@@ -26,8 +26,8 @@ const listQuerySchema = z.object({
 
 export type Employee = z.infer<typeof employeeSchema>;
 
-export async function applyApiDelay() {
-    await new Promise((resolve) => setTimeout(resolve, API_DELAY));
+export async function applyApiDelay(delay: number = API_DELAY) {
+    await new Promise((resolve) => setTimeout(resolve, delay));
 }
 
 export function getForcedFailure(request: Request) {
@@ -55,7 +55,7 @@ export const employeeListResponse = z.object({
 export type EmployeeListResponse = z.infer<typeof employeeListResponse>;
 
 export async function getEmployeeList(request: Request) {
-    await applyApiDelay();
+    await applyApiDelay(30);
     const params = new URL(request.url).searchParams;
     const parsedQuery = listQuerySchema.safeParse({
         search: params.get("search") ?? undefined,
@@ -99,6 +99,6 @@ export async function getEmployeeList(request: Request) {
 }
 
 export async function getEmployeeById(id: string) {
-    await applyApiDelay();
+    await applyApiDelay(30);
     return employees.find((employee) => employee.id === id);
 }
